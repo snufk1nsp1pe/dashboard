@@ -40,11 +40,7 @@ PLOTLY_SEQUENCE = ["#d4af6a", "#6b9074", "#7eb8c9", "#b8735a", "#9a92b4", "#c49a
 FEATURES = ["year", "sale_year", "month", "originalmillionusd"]
 TARGET = "adjustedmillionusd"
 
-ROOT = Path(__file__).resolve().parent.parent
-CSV_CANDIDATES = [
-    ROOT / "paintings_cleaned.csv",
-    
-]
+CSV_PATH = Path(__file__).parent / "paintings_cleaned.csv"
 
 st.set_page_config(
     page_title="Atelier — Paintings Pipeline",
@@ -199,18 +195,16 @@ mpl_setup()
 
 
 def resolve_csv() -> Path:
-    for p in CSV_CANDIDATES:
-        if p.is_file():
-            return p
+    if CSV_PATH.is_file():
+        return CSV_PATH
     raise FileNotFoundError(
-        "paintings_cleaned.csv not found. Place at repo root, lab3-4/, or lab6/."
+        "paintings_cleaned.csv not found. Place at repo root"
     )
 
 
 @st.cache_data
 def load_paintings() -> pd.DataFrame:
-    path = resolve_csv()
-    df = pd.read_csv(path)
+    df = pd.read_csv(CSV_PATH)
     df["date_of_sale"] = pd.to_datetime(df["date_of_sale"], errors="coerce")
     df["month"] = df["date_of_sale"].dt.month
 
@@ -326,7 +320,7 @@ with st.sidebar:
     test_frac = st.slider("Hold-out fraction", 0.15, 0.35, 0.20, 0.05)
     seed = st.number_input("Random state", value=42, step=1)
     st.divider()
-    st.caption(f"Source: `{resolve_csv().name}`")
+    st.caption(f"Source: `{CSV_PATH.name}`")
 
 bund = regression_bundle(test_size=test_frac, random_state=int(seed))
 
