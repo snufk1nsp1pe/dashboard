@@ -43,8 +43,7 @@ TARGET = "adjustedmillionusd"
 ROOT = Path(__file__).resolve().parent.parent
 CSV_CANDIDATES = [
     ROOT / "paintings_cleaned.csv",
-    ROOT / "lab3-4" / "paintings_cleaned.csv",
-    ROOT / "lab6" / "paintings_cleaned.csv",
+    
 ]
 
 st.set_page_config(
